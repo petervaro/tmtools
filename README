@@ -1,0 +1,17 @@
+tmtools
+=======
+
+Bunch of utilities to convert python dictionaries to TextMate and SublimeText
+related property lists. The advantages of using python dictionaries over plain
+JSON or YAML conversions are modularity, and the full power of python, like
+variables, on-the-fly string generation or dictionary manipulations. These are
+truly helpful assets while writing these XML snippets for all the compatible
+text-editors.
+
+
+Examples
+--------
+
+https://github.com/petervaro/python
+https://github.com/petervaro/cutils
+https://github.com/petervaro/javascript
