@@ -5,7 +5,7 @@
 ##                                  =======                                   ##
 ##                                                                            ##
 ##             tmLanguage, tmTheme, tmPreferences, etc. generator             ##
-##                       Version: 1.0.00.006 (20141023)                       ##
+##                       Version: 1.0.00.070 (20141028)                       ##
 ##                                                                            ##
 ##                         File: tmtools/comments.py                          ##
 ##                                                                            ##
@@ -42,15 +42,15 @@ def generate_comments(scope, lines=None, blocks=None):
     if lines:
         suffix = '_2'
         values.append({'name' : 'TM_COMMENT_START',
-                       'value': lines})
+                       'value': lines + ' '})
 
     # If langauge has block comments
     try:
         start, close = blocks
         values.append({'name' : 'TM_COMMENT_START{}'.format(suffix),
-                       'value': start})
+                       'value': start + ' '})
         values.append({'name' : 'TM_COMMENT_END{}'.format(suffix),
-                       'value': close})
+                       'value': ' ' + close})
     except TypeError:
         pass
 

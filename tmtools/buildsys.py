@@ -5,9 +5,9 @@
 ##                                  =======                                   ##
 ##                                                                            ##
 ##             tmLanguage, tmTheme, tmPreferences, etc. generator             ##
-##                       Version: 1.0.00.074 (20141110)                       ##
+##                       Version: 1.0.00.088 (20141110)                       ##
 ##                                                                            ##
-##                               File: setup.py                               ##
+##                         File: tmtools/buildsys.py                          ##
 ##                                                                            ##
 ##            For more information about the project, please visit            ##
 ##                  <https://github.com/petervaro/tmtools>.                   ##
@@ -29,30 +29,28 @@
 ##                                                                            ##
 ######################################################################## INFO ##
 
-# Import python modules
-from distutils.core import setup
+#------------------------------------------------------------------------------#
+def generate_buildsys(scope, build, run=None, rebuild=None, rebuild_and_run=None):
+    # Commands and their names
+    options = {'Run': run,
+               'Rebuild': rebuild,
+               'Rebuild and Run': rebuild_and_run}
 
-# Install tmtools
-if __name__ == '__main__':
-    # Get current version number
-    with open('VERSION', encoding='utf-8') as file:
-        VERSION = '.'.join(file.read().split('.')[:-1])
+    # Basic build system
+    buildsys = {'cmd': build,
+                'shell': True,
+                'selector': 'source.{}'.format(scope)}
 
-    # Get license information
-    with open('LICENSE', encoding='utf-8') as file:
-        LICENSE = file.read()
+    # Construct command variants
+    variants = []
+    for name, command in options.items():
+        if command:
+            variants.append({'name': name,
+                             'cmd': command,
+                             'shell': True})
+    # If there wre variants
+    if variants:
+        buildsys['variants'] = variants
 
-    # Get license information
-    with open('README', encoding='utf-8') as file:
-        README = file.read()
-
-    setup(name='tmtools',
-          version=VERSION,
-          license=LICENSE,
-          description='tmLanguage, tmTheme, tmPreferences, etc. generator',
-          long_description=README,
-          author='Peter Varo',
-          author_email='petervaro@sketchandprototype.com',
-          url='https://github.com/petervaro/tmtools',
-          platforms='Any',
-          packages=['tmtools'])
+    # Return new plist
+    return buildsys

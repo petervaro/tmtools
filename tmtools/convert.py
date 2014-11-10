@@ -5,7 +5,7 @@
 ##                                  =======                                   ##
 ##                                                                            ##
 ##             tmLanguage, tmTheme, tmPreferences, etc. generator             ##
-##                       Version: 1.0.00.006 (20141023)                       ##
+##                       Version: 1.0.00.091 (20141110)                       ##
 ##                                                                            ##
 ##                          File: tmtools/convert.py                          ##
 ##                                                                            ##
@@ -30,6 +30,7 @@
 ######################################################################## INFO ##
 
 # Import python modules
+import json
 import plistlib
 from os import makedirs
 from copy import deepcopy
@@ -38,12 +39,14 @@ from collections import OrderedDict
 from os.path import join, expanduser
 
 # Import user modules
-from src.comments import generate_comments
+from .comments import generate_comments
+from .buildsys import generate_buildsys
 
 # Module level constants
 THEME_EXT = '.tmTheme'
 LANG_EXT  = '.tmLanguage'
 PREF_EXT  = '.tmPreferences'
+BUILD_EXT = '.sublime-build'
 NAME_KEYS = 'name', 'contentName', 'scopeName'
 
 
@@ -125,7 +128,8 @@ class TMFile:
                        test_name=None,
                        test_file=None,
                        test_path=None,
-                       comments={}):
+                       comments={},
+                       buildsys={}):
         # Store static values
         self._name  = name
         self._file  = file or name
@@ -135,6 +139,7 @@ class TMFile:
         self._test_file = test_file or self._test_name
         self._test_path = test_path or self._path
         self._comments = comments
+        self._buildsys = buildsys
         # Create empty definitions
         self._definition = self._test_definition = {}
 
@@ -147,6 +152,12 @@ class TMFile:
         if comments:
             comment_name = 'Comments({})'.format(self._name) + PREF_EXT
             preference = generate_comments(self._scope, **comments)
+        # If write build-systems too
+        buildsys = self._buildsys
+        if buildsys:
+            buildsys_name = self._name + BUILD_EXT
+            buildsys.setdefault('build', 'echo "There is no `build` command defined"')
+            system = generate_buildsys(self._scope, **buildsys)
         # Write work and/or test files to path(s)
         for definition, (file_path, file_name) in zip((self._definition, self._test_definition),
                                                       _combinator((self._path, self._test_path),
@@ -167,8 +178,12 @@ class TMFile:
                     plistlib.dump(preference, file)
                     print('Comments preference has been converted and placed:',
                           '\t{!r}'.format(full_path), sep='\n')
-
-
+            if buildsys:
+                full_path = join(real_path, buildsys_name)
+                with open(full_path, 'w') as file:
+                    json.dump(system, file, indent=4)
+                    print('Build system has been converted and placed:',
+                          '\t{!r}'.format(full_path), sep='\n')
 
 #------------------------------------------------------------------------------#
 class Language(TMFile):

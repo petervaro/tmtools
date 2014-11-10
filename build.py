@@ -5,7 +5,7 @@
 ##                                  =======                                   ##
 ##                                                                            ##
 ##             tmLanguage, tmTheme, tmPreferences, etc. generator             ##
-##                       Version: 1.0.00.065 (20141024)                       ##
+##                       Version: 1.0.00.070 (20141028)                       ##
 ##                                                                            ##
 ##                               File: build.py                               ##
 ##                                                                            ##
@@ -38,15 +38,15 @@ try:
     import cutils.clic
     import cutils.cver
 
-    exceptions = cutils.ccom.EXCEPTIONS
-    exceptions['folders'].append('build')
+    exclude = cutils.ccom.EXCLUDE
+    exclude['folders'].append('build')
 
     # Update version
     cutils.cver.version(CURRENT_DIR, sub_max=9, rev_max=99, build_max=999)
     # Collect all special comments
-    cutils.ccom.collect(CURRENT_DIR, exceptions=exceptions)
+    cutils.ccom.collect(CURRENT_DIR, exclude=exclude)
     # Update header comments
-    cutils.clic.header(CURRENT_DIR, exceptions=exceptions)
+    cutils.clic.header(CURRENT_DIR, exclude=exclude)
 except ImportError:
     print('[WARNING] cutils modules are missing: '
           'install it from http://www.cutils.org')
