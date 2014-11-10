@@ -5,7 +5,7 @@
 ##                                  =======                                   ##
 ##                                                                            ##
 ##             tmLanguage, tmTheme, tmPreferences, etc. generator             ##
-##                       Version: 1.0.00.088 (20141110)                       ##
+##                       Version: 1.0.00.094 (20141110)                       ##
 ##                                                                            ##
 ##                         File: tmtools/buildsys.py                          ##
 ##                                                                            ##
@@ -30,7 +30,8 @@
 ######################################################################## INFO ##
 
 #------------------------------------------------------------------------------#
-def generate_buildsys(scope, build, run=None, rebuild=None, rebuild_and_run=None):
+def generate_buildsys(scope, build, run=None, rebuild=None,
+                      rebuild_and_run=None, **kwargs):
     # Commands and their names
     options = {'Run': run,
                'Rebuild': rebuild,

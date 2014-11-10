@@ -5,7 +5,7 @@
 ##                                  =======                                   ##
 ##                                                                            ##
 ##             tmLanguage, tmTheme, tmPreferences, etc. generator             ##
-##                       Version: 1.0.00.070 (20141028)                       ##
+##                       Version: 1.0.00.094 (20141110)                       ##
 ##                                                                            ##
 ##                         File: tmtools/comments.py                          ##
 ##                                                                            ##
@@ -30,7 +30,7 @@
 ######################################################################## INFO ##
 
 #------------------------------------------------------------------------------#
-def generate_comments(scope, lines=None, blocks=None):
+def generate_comments(scope, lines=None, blocks=None, **kwargs):
     # Build tmPreferences values
     suffix = ''
     values = []
