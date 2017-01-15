@@ -70,16 +70,20 @@ def _combinator(iterable1, iterable2):
 def _replacer(data, name, scope):
     # If data is not the preferred container type
     if not isinstance(data, (dict, list)):
-        return
+        if isinstance(data, (int, str)):
+            return
+        else:
+            raise TypeError("tmtools' abstractions can operate only "
+                            'on dict, list, int and str objects')
     # If data is a dictionary
     try:
-        for key, value in data.items():
+        for key, value in list(data.items()):
             # If key is one of the name-keys
             if key in NAME_KEYS:
                 data[key] = value.format(NAME=name, SCOPE=scope)
                 continue
             # Convert integer dictionary keys into string literals
-            elif isinstance(key, int):
+            if isinstance(key, int):
                 data[str(key)] = data.pop(key)
             # Recursion on sub-data
             _replacer(value, name, scope)
