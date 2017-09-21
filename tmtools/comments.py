@@ -1,58 +1,33 @@
 #!/usr/bin/env python3
-## INFO ########################################################################
-##                                                                            ##
-##                                  tmtools                                   ##
-##                                  =======                                   ##
-##                                                                            ##
-##             tmLanguage, tmTheme, tmPreferences, etc. generator             ##
-##                       Version: 1.0.00.094 (20141110)                       ##
-##                                                                            ##
-##                         File: tmtools/comments.py                          ##
-##                                                                            ##
-##            For more information about the project, please visit            ##
-##                  <https://github.com/petervaro/tmtools>.                   ##
-##                       Copyright (C) 2014 Peter Varo                        ##
-##                                                                            ##
-##  This program is free software: you can redistribute it and/or modify it   ##
-##   under the terms of the GNU General Public License as published by the    ##
-##       Free Software Foundation, either version 3 of the License, or        ##
-##                    (at your option) any later version.                     ##
-##                                                                            ##
-##    This program is distributed in the hope that it will be useful, but     ##
-##         WITHOUT ANY WARRANTY; without even the implied warranty of         ##
-##            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.            ##
-##            See the GNU General Public License for more details.            ##
-##                                                                            ##
-##     You should have received a copy of the GNU General Public License      ##
-##     along with this program, most likely a file in the root directory,     ##
-##        called 'LICENSE'. If not, see <http://www.gnu.org/licenses>.        ##
-##                                                                            ##
-######################################################################## INFO ##
+## INFO ##
+## INFO ##
+
+# Import python modules
+from itertools import count
+
 
 #------------------------------------------------------------------------------#
-def generate_comments(scope, lines=None, blocks=None, **kwargs):
-    # Build tmPreferences values
-    suffix = ''
+def generate_comments(scope,
+                      line_comments  = (),
+                      block_comments = (),
+                      **kwargs):
+    index  = count()
     values = []
-    preference = {'name' : 'Comments',
-                  'scope': 'source.{}'.format(scope),
-                  'settings': {'shellVariables': values}}
 
     # If language has line comments
-    if lines:
-        suffix = '_2'
-        values.append({'name' : 'TM_COMMENT_START',
-                       'value': lines + ' '})
+    for line_comment, i in zip(line_comments, index):
+        values.append({'name' : f'TM_COMMENT_START{f"_{i + 1}" if i else ""}',
+                       'value': line_comment + ' '})
 
     # If langauge has block comments
-    try:
-        start, close = blocks
-        values.append({'name' : 'TM_COMMENT_START{}'.format(suffix),
-                       'value': start + ' '})
-        values.append({'name' : 'TM_COMMENT_END{}'.format(suffix),
-                       'value': ' ' + close})
-    except TypeError:
-        pass
+    for (start_comment, close_comment), i in zip(block_comments, index):
+        suffix = f'_{i + 1}' if i else ''
+        values.append({'name' : f'TM_COMMENT_START{suffix}',
+                       'value': start_comment + ' '})
+        values.append({'name' : f'TM_COMMENT_END{suffix}',
+                       'value': ' ' + close_comment})
 
     # Return the new plist
-    return preference
+    return {'name' : 'Comments',
+            'scope': f'source.{scope}',
+            'settings': {'shellVariables': values}}

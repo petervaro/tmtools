@@ -7,5 +7,6 @@
 .ccom_cache
 .ccom_todo
 .clic_cache
+.cache
 
 build

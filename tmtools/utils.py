@@ -1,33 +1,6 @@
 #!/usr/bin/env python3
-## INFO ########################################################################
-##                                                                            ##
-##                                  tmtools                                   ##
-##                                  =======                                   ##
-##                                                                            ##
-##             tmLanguage, tmTheme, tmPreferences, etc. generator             ##
-##                       Version: 1.0.00.006 (20141023)                       ##
-##                                                                            ##
-##                           File: tmtools/utils.py                           ##
-##                                                                            ##
-##            For more information about the project, please visit            ##
-##                  <https://github.com/petervaro/tmtools>.                   ##
-##                       Copyright (C) 2014 Peter Varo                        ##
-##                                                                            ##
-##  This program is free software: you can redistribute it and/or modify it   ##
-##   under the terms of the GNU General Public License as published by the    ##
-##       Free Software Foundation, either version 3 of the License, or        ##
-##                    (at your option) any later version.                     ##
-##                                                                            ##
-##    This program is distributed in the hope that it will be useful, but     ##
-##         WITHOUT ANY WARRANTY; without even the implied warranty of         ##
-##            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.            ##
-##            See the GNU General Public License for more details.            ##
-##                                                                            ##
-##     You should have received a copy of the GNU General Public License      ##
-##     along with this program, most likely a file in the root directory,     ##
-##        called 'LICENSE'. If not, see <http://www.gnu.org/licenses>.        ##
-##                                                                            ##
-######################################################################## INFO ##
+## INFO ##
+## INFO ##
 
 
 #------------------------------------------------------------------------------#
@@ -64,17 +37,17 @@ class hsba:
         t = b * (1.0 - (1.0 - f) * s)
 
         if i == 0:
-            rgb = (b, t, p)
+            rgb = b, t, p
         elif i == 1:
-            rgb = (q, b, p)
+            rgb = q, b, p
         elif i == 2:
-            rgb = (p, b, t)
+            rgb = p, b, t
         elif i == 3:
-            rgb = (p, q, b)
+            rgb = p, q, b
         elif i == 4:
-            rgb = (t, p, b)
+            rgb = t, p, b
         elif i == 5:
-            rgb = (b, p, q)
+            rgb = b, p, q
 
         # Store converted values
         self._rgba = rgb + (a,)
@@ -83,8 +56,9 @@ class hsba:
     #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
     def to_hex(self):
         # Convert to hexadecimal string representation
-        alpha = '' if self._alpha >= 1.0 else '{:02X}'.format(int(self._alpha*255))
-        return '#{:02X}{:02X}{:02X}{a}'.format(*(int(c*255) for c in self._rgba[:3]), a=alpha)
+        alpha = '' if self._alpha >= 1.0 else f'{int(self._alpha*255):02X}'
+        return '#{:02X}{:02X}{:02X}{a}'.format(
+            *(int(c*255) for c in self._rgba[:3]), a=alpha)
 
 
     #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
@@ -98,4 +72,4 @@ class hsba:
 # Generate section captions
 def separator(*captions):
     for caption in captions:
-        print('#{:-<78}#'.format('-- {} '.format(caption.upper())))
+        print('#{:-<78}#'.format(f'-- {caption.upper()} '))

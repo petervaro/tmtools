@@ -1,33 +1,6 @@
 #!/usr/bin/env python3
-## INFO ########################################################################
-##                                                                            ##
-##                                  tmtools                                   ##
-##                                  =======                                   ##
-##                                                                            ##
-##             tmLanguage, tmTheme, tmPreferences, etc. generator             ##
-##                       Version: 1.0.00.091 (20141110)                       ##
-##                                                                            ##
-##                          File: tmtools/convert.py                          ##
-##                                                                            ##
-##            For more information about the project, please visit            ##
-##                  <https://github.com/petervaro/tmtools>.                   ##
-##                       Copyright (C) 2014 Peter Varo                        ##
-##                                                                            ##
-##  This program is free software: you can redistribute it and/or modify it   ##
-##   under the terms of the GNU General Public License as published by the    ##
-##       Free Software Foundation, either version 3 of the License, or        ##
-##                    (at your option) any later version.                     ##
-##                                                                            ##
-##    This program is distributed in the hope that it will be useful, but     ##
-##         WITHOUT ANY WARRANTY; without even the implied warranty of         ##
-##            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.            ##
-##            See the GNU General Public License for more details.            ##
-##                                                                            ##
-##     You should have received a copy of the GNU General Public License      ##
-##     along with this program, most likely a file in the root directory,     ##
-##        called 'LICENSE'. If not, see <http://www.gnu.org/licenses>.        ##
-##                                                                            ##
-######################################################################## INFO ##
+## INFO ##
+## INFO ##
 
 # Import python modules
 import json
@@ -39,8 +12,8 @@ from collections import OrderedDict
 from os.path import join, expanduser
 
 # Import user modules
-from .comments import generate_comments
-from .buildsys import generate_buildsys
+from tmtools.comments import generate_comments
+from tmtools.buildsys import generate_buildsys
 
 # Module level constants
 THEME_EXT = '.tmTheme'
@@ -135,37 +108,41 @@ class TMFile:
                        comments={},
                        buildsys={}):
         # Store static values
-        self._name  = name
-        self._file  = file or name
-        self._path  = path or os.getcwd()
-        self._scope = scope
+        self._name      = name
+        self._file      = file or name
+        self._path      = path or os.getcwd()
+        self._scope     = scope
         self._test_name = test_name or name
         self._test_file = test_file or self._test_name
         self._test_path = test_path or self._path
-        self._comments = comments
-        self._buildsys = buildsys
+        self._comments  = comments
+        self._buildsys  = buildsys
         # Create empty definitions
         self._definition = self._test_definition = {}
 
 
     #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
     # TODO: Add "Automatically Generated, Don't Change" label to files
-    def write(self, kind, extension):
+    def write(self, kind,
+                    extension):
         # If write comments-tmpreferences too
         comments = self._comments
         if comments:
-            comment_name = 'Comments({})'.format(self._name) + PREF_EXT
+            comment_name = f'Comments({self._name}){PREF_EXT}'
             preference = generate_comments(self._scope, **comments)
         # If write build-systems too
         buildsys = self._buildsys
         if buildsys:
             buildsys_name = self._name + BUILD_EXT
-            buildsys.setdefault('build', 'echo "There is no `build` command defined"')
+            buildsys.setdefault(
+                'build',
+                'printf \'There is no "build" command defined\n\'')
             system = generate_buildsys(self._scope, **buildsys)
         # Write work and/or test files to path(s)
-        for definition, (file_path, file_name) in zip((self._definition, self._test_definition),
-                                                      _combinator((self._path, self._test_path),
-                                                                  (self._file, self._test_file))):
+        definitions = self._definition, self._test_definition
+        paths_names = _combinator((self._path, self._test_path),
+                                  (self._file, self._test_file))
+        for definition, (file_path, file_name) in zip(definitions, paths_names):
             # Create dirs if they don't exist
             real_path = expanduser(file_path)
             makedirs(real_path, exist_ok=True)
@@ -174,20 +151,25 @@ class TMFile:
             # Write out the property-list file
             with open(full_path, 'w+b') as file:
                 plistlib.dump(definition, file)
-                print('{} dictionary has been converted and placed:'.format(kind),
-                      '\t{!r}'.format(full_path), sep='\n')
+                print(f'{kind} dictionary has been converted and placed:',
+                      f'\t{full_path!r}',
+                      sep='\n')
             if comments:
                 full_path = join(real_path, comment_name)
                 with open(full_path, 'w+b') as file:
                     plistlib.dump(preference, file)
                     print('Comments preference has been converted and placed:',
-                          '\t{!r}'.format(full_path), sep='\n')
+                          f'\t{full_path!r}',
+                          sep='\n')
             if buildsys:
                 full_path = join(real_path, buildsys_name)
                 with open(full_path, 'w') as file:
                     json.dump(system, file, indent=4)
                     print('Build system has been converted and placed:',
-                          '\t{!r}'.format(full_path), sep='\n')
+                          f'\t{full_path!r}',
+                          sep='\n')
+
+
 
 #------------------------------------------------------------------------------#
 class Language(TMFile):

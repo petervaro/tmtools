@@ -1,17 +1,37 @@
-tmtools
+TMTOOLS
 =======
 
 Bunch of utilities to convert python dictionaries to TextMate and SublimeText
 related property lists. The advantages of using python dictionaries over plain
-JSON or YAML conversions are modularity, and the full power of python, like
-variables, on-the-fly string generation or dictionary manipulations. These are
-truly helpful assets while writing these XML snippets for all the compatible
-text-editors.
+JSON or YAML files are modularity, and the full power of a scripting language,
+like variables, on-the-fly string generation or dictionary manipulations.
 
 
-Examples
+
+EXAMPLES
 --------
 
 https://github.com/petervaro/python
-https://github.com/petervaro/cutils
-https://github.com/petervaro/javascript
+https://github.com/petervaro/c11
+https://github.com/petervaro/tup
+https://github.com/petervaro/d2
+
+
+
+LICENSE
+-------
+
+Copyright (C) 2014-2017 Peter Varo
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program, most likely a file in the root directory, called 'LICENSE'. If
+not, see <http://www.gnu.org/licenses>.
