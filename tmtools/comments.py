@@ -8,24 +8,27 @@ from itertools import count
 
 #------------------------------------------------------------------------------#
 def generate_comments(scope,
-                      line_comments  = (),
-                      block_comments = (),
-                      **kwargs):
-    index  = count()
+                      comments=()):
     values = []
+    for i, comment in enumerate(comments):
+        if not isinstance(comment, dict):
+            raise DeprecationWarning('Comment description should be a `dict`')
 
-    # If language has line comments
-    for line_comment, i in zip(line_comments, index):
-        values.append({'name' : f'TM_COMMENT_START{f"_{i + 1}" if i else ""}',
-                       'value': line_comment + ' '})
-
-    # If langauge has block comments
-    for (start_comment, close_comment), i in zip(block_comments, index):
         suffix = f'_{i + 1}' if i else ''
-        values.append({'name' : f'TM_COMMENT_START{suffix}',
-                       'value': start_comment + ' '})
-        values.append({'name' : f'TM_COMMENT_END{suffix}',
-                       'value': ' ' + close_comment})
+        values.append({'name' : 'TM_COMMENT_START' + suffix,
+                       'value': comment['begin'] + ' '})
+
+        try:
+            values.append({'name' : 'TM_COMMENT_END' + suffix,
+                           'value': ' ' + comment['end']})
+        except KeyError:
+            pass
+
+        try:
+            values.append({'name' : 'TM_COMMENT_DISABLE_INDENT' + suffix,
+                           'value': comment['disable_indent']})
+        except KeyError:
+            pass
 
     # Return the new plist
     return {'name' : 'Comments',

@@ -129,7 +129,7 @@ class TMFile:
         comments = self._comments
         if comments:
             comment_name = f'Comments({self._name}){PREF_EXT}'
-            preference = generate_comments(self._scope, **comments)
+            preference = generate_comments(self._scope, comments)
         # If write build-systems too
         buildsys = self._buildsys
         if buildsys:
